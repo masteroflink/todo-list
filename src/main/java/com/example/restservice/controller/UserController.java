@@ -18,15 +18,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.HttpStatus;
 
 import com.example.restservice.models.User;
+import com.example.restservice.models.Task;
 import com.example.restservice.repository.UserRepository;
 
 @RestController
-@RequestMapping(path="/users")
+@RequestMapping(path="/user")
 public class UserController {
   @Autowired
   private UserRepository userRepository;
 
-  @GetMapping(path="", produces="application/json")
+  @GetMapping(produces="application/json")
   public ResponseEntity<Object> getUsers() {
     try {
       List<User> users = userRepository.findAll();
@@ -52,7 +53,7 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(user);
   }
 
-  @PostMapping(path="", consumes="application/json", produces="application/json")
+  @PostMapping(consumes="application/json", produces="application/json")
   public ResponseEntity<Object> addUser(@RequestBody User user) {
     userRepository.save(user);
 
@@ -63,6 +64,21 @@ public class UserController {
                       .toUri();
 
     return ResponseEntity.created(location).body(user);
+  }
+
+  @PostMapping(path="/{user_id}/tasks/add", consumes="application/json", produces="application/json")
+  public ResponseEntity<Object> addUserTask(@PathVariable long user_id, @RequestBody Task task) {
+    User u = userRepository.findById(user_id);
+    u.addTask(task);
+    userRepository.save(u);
+
+    URI location = ServletUriComponentsBuilder
+                      .fromCurrentRequest()
+                      .path("/{id}")
+                      .buildAndExpand(user_id)
+                      .toUri();
+
+    return ResponseEntity.created(location).body(task);
   }
 
   @DeleteMapping(path="/{id}", produces="application/json")

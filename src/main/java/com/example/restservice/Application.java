@@ -10,7 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import com.example.restservice.repository.UserRepository;
+import com.example.restservice.repository.TaskRepository;
 import com.example.restservice.models.User;
+import com.example.restservice.models.Task;
+
 
 @SpringBootApplication
 public class Application {
@@ -21,12 +24,34 @@ public class Application {
 	}
 
 	@Bean
-  public CommandLineRunner demo(UserRepository repository) {
+  public CommandLineRunner initializeUserData(UserRepository repository) {
     return (args) -> {
-      repository.save(new User("Mickey", "mickey@example.com"));
-      repository.save(new User("Donald", "donald@example.com"));
-      repository.save(new User("Zelda", "zelda@example.com"));
-      repository.save(new User("Link", "link@example.com"));
+			log.info("Insert example users...");
+			User[] users = new User[]{
+				new User("Mickey", "mickey@example.com"),
+				new User("Donald", "donald@example.com"),
+				new User("Zelda", "zelda@example.com"),
+				new User("Link", "link@example.com")
+			};
+			
+			
+			log.info("Adding tasks to User 1...");
+			log.info("-----------------------------------------------");
+			Task[] tasks = new Task[]{
+				new Task("Take out trash", "2023-04-11T00:00:00+00:00"),
+				new Task("Read 2 hours", "2023-05-11T00:00:00+00:00"),
+				new Task("Complete homework 1-5", "2023-04-02T00:00:00+00:00"),
+				new Task("Do dishes", "2023-06-18T00:00:00+00:00")
+			};
+
+			for (Task task : tasks) {
+				users[0].addTask(task);
+			}
+
+			for (User user : users) {
+				repository.save(user);
+			}
+
 
       log.info("All Users:");
       log.info("-----------------------------------------------");
