@@ -239,7 +239,7 @@ example Return:
 
 example return:
 
-```json
+```
 User with id 4 successfully deleted
 ```
 
@@ -337,6 +337,6 @@ example return:
 
 example return:
 
-```json
+```
 Task with id 4 successfully deleted
 ```
