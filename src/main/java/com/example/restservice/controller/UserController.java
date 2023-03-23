@@ -53,6 +53,22 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(user);
   }
 
+  @PostMapping(path="/{id}", consumes="application/json", produces="application/json")
+  public ResponseEntity<Object> editUser(@PathVariable long id, @RequestBody User user) {
+    User u = userRepository.findById(id);
+    if (u == null) {
+      return ResponseEntity
+        .status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .body(String.format("User not found with id: %d", id));
+    }
+
+    u.setFields(user);
+    userRepository.save(u);
+
+
+    return ResponseEntity.status(HttpStatus.OK).body(u);
+  }
+
   @PostMapping(consumes="application/json", produces="application/json")
   public ResponseEntity<Object> addUser(@RequestBody User user) {
     userRepository.save(user);
@@ -78,7 +94,7 @@ public class UserController {
                       .buildAndExpand(user_id)
                       .toUri();
 
-    return ResponseEntity.created(location).body(task);
+    return ResponseEntity.created(location).body(u);
   }
 
   @DeleteMapping(path="/{id}", produces="application/json")

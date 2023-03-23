@@ -54,6 +54,22 @@ public class TaskController {
     return ResponseEntity.status(HttpStatus.OK).body(task);
   }
 
+  @PostMapping(path="/{id}", consumes="application/json", produces="application/json")
+  public ResponseEntity<Object> editTask(@PathVariable long id, @RequestBody Task task) {
+    Task t = taskRepository.findById(id);
+    if (t == null) {
+      return ResponseEntity
+        .status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .body(String.format("Task not found with id: %d", id));
+    }
+
+    t.setFields(task);
+    taskRepository.save(t);
+
+
+    return ResponseEntity.status(HttpStatus.OK).body(t);
+  }
+
   @DeleteMapping(path="/{id}", produces="application/json")
   public ResponseEntity<Object> deleteTask(@PathVariable("id") long id) {
     try {

@@ -10,9 +10,12 @@ import java.time.*;
 import java.time.OffsetDateTime;
 import java.sql.Timestamp;
 import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Embeddable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -20,16 +23,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.example.restservice.models.User;
 
 @Entity
+@Embeddable
 @Table(name = "tasks")
 public class Task {
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Long id;
+  @Column(nullable=false)
   private String title;
 
-  // @Column(nullable=false)
-  @JsonIgnore
   @ManyToOne(fetch=FetchType.LAZY)
+  @JoinColumn(name="user_id", nullable=false)
+  @JsonBackReference
   private User user;
   private OffsetDateTime dueDate;
   
@@ -89,5 +94,10 @@ public class Task {
 
   public void setUser(User user) {
     this.user = user;
+  }
+  
+  public void setFields(Task task) {
+    this.dueDate = task.getDueDate();
+    this.title = task.getTitle();
   }
 }

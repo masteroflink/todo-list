@@ -9,13 +9,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import java.util.List;
 import java.util.ArrayList;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import jakarta.persistence.CascadeType;
-
 
 @Entity
 @Table(name = "users")
@@ -23,9 +24,12 @@ public class User {
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Long id;
+  @Column(nullable=false)
   private String name;
+  @Column(nullable=false)
   private String email;
-  @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
+  @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+  @JsonManagedReference
   private List<Task> tasks = new ArrayList<>();
   
   @Column(updatable=false)
@@ -82,5 +86,10 @@ public class User {
 
   public void setTasks(List<Task> tasks) {
     this.tasks = tasks;
+  }
+
+  public void setFields(User user) {
+    this.name = user.getName();
+    this.email = user.getEmail();
   }
 }
