@@ -15,6 +15,7 @@ This is a fully CRUD RESTful API that allows users to manage their user account 
 - ## mvn
   - run `brew install mvn`
 - PgAdmin4 (Optional)
+  - [Install PgAdmin](https://www.pgadmin.org/download/)
 
 ### To Run application
 
@@ -22,6 +23,17 @@ This is a fully CRUD RESTful API that allows users to manage their user account 
 ./spin_up_postgres.sh
 ./mvnw spring-boot:run
 ```
+
+### Connect with PgAdmin4 (Optional)
+
+- right click on Servers on left side.
+- Register -> Server
+- Name: todo_list
+- click on Connection tab
+- Host name/address: localhost
+- port: 5455
+- Username: postgrewuser
+- Password: postgrespw
 
 ## Schema
 
